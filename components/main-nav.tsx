@@ -16,6 +16,11 @@ export const MainNav = ({
     // NOTE: we can access params because we are using main-nav inside layuout.tsx inside (dashboard) \ [storeId]
     const routes = [
         {
+            href: `/${params.storeId}`,
+            label: "Overview",
+            active: pathname === `/${params.storeId}`,
+        },
+        {
             href: `/${params.storeId}/settings`,
             label: "Settings",
             active: pathname === `/${params.storeId}/settings`,
@@ -25,7 +30,7 @@ export const MainNav = ({
     return (
         <nav
             className={cn(
-                "flex items-center space-x-4 lg:space-x-6",
+                "flex items-center space-x-4 lg:space-x-6 ml-6",
                 className
             )}
         >
@@ -36,7 +41,7 @@ export const MainNav = ({
                     className={cn(
                         "text-sm font-medium transition-color hover:text-primary",
                         route.active
-                            ? "text-black dark: text-white"
+                            ? "text-black dark:text-white"
                             : "text-muted-foreground"
                     )}
                 >

@@ -20,7 +20,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 import axios from "axios";
-import { redirect } from "next/navigation";
 
 const formSchema = z.object({
     name: z.string().min(1),
@@ -38,6 +37,7 @@ export const StoreModal = () => {
         },
     });
 
+    // #TODO: To prevent duplicate storenames
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             setLoading(true);
@@ -79,7 +79,6 @@ export const StoreModal = () => {
                                                 disabled={loading}
                                                 {...field}
                                                 placeholder="E-Commerce"
-                                                {...field}
                                             />
                                         </FormControl>
                                         <FormMessage />
