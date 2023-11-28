@@ -24,9 +24,9 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { AlertModal } from "@/components/modals/alert-modal";
-import { ApiAlert } from "@/components/ui/api-alert";
-import { useOrigin } from "@/hooks/use-origin";
 import ImageUpload from "@/components/ui/image-upload";
+import { revalidatePath } from "next/cache";
+import clearCachesByServerAction from "../../components/reset-cache";
 
 interface BillboardFormProps {
     // there is a chance that billboard is not found
@@ -65,6 +65,7 @@ const BillboardForm: React.FC<BillboardFormProps> = ({ initialData }) => {
     const router = useRouter();
 
     // can be called data or values doesnt matter
+    // #DBG: Sometimes when you perform CRUD, u need refresh to get update because i think db not done then  upush therer alrdy
     const onSubmit = async (data: BillboardFormValues) => {
         try {
             setLoading(true);
@@ -76,12 +77,14 @@ const BillboardForm: React.FC<BillboardFormProps> = ({ initialData }) => {
             } else {
                 await axios.post(`/api/${params.storeId}/billboards`, data);
             }
-
+            clearCachesByServerAction(`/`);
             router.refresh();
             router.push(`/${params.storeId}/billboards`);
+
             toast.success(toastMessage);
-        } catch (error) {
-            toast.error("Something went wrong");
+        } catch (error: any) {
+            console.log(error);
+            toast.error("Something went wrong.");
         } finally {
             setLoading(false);
         }
@@ -90,10 +93,12 @@ const BillboardForm: React.FC<BillboardFormProps> = ({ initialData }) => {
     const onDelete = async () => {
         try {
             setLoading(true);
-            await axios.delete(`/api/${params.storeId}/${params.billboardId}`);
+            await axios.delete(
+                `/api/${params.storeId}/billboards/${params.billboardId}`
+            );
+            clearCachesByServerAction(`/`);
             router.refresh();
-            // default to the first store thats remaining, else default to the modal if there are no more stores
-            router.push("/");
+            router.push(`/${params.storeId}/billboards`);
             toast.success("Billboard deleted");
         } catch (error) {
             toast.error(
@@ -101,6 +106,7 @@ const BillboardForm: React.FC<BillboardFormProps> = ({ initialData }) => {
             );
         } finally {
             setLoading(false);
+            setOpen(false);
         }
     };
 
