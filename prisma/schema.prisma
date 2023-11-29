@@ -24,11 +24,13 @@ datasource db {
   relationMode = "prisma"
 }
 
+// NOTE: a bit different from the vid
 model Store {
   id            String        @id @default(uuid())
   name          String
   userId        String
   billboards    Billboard[]   @relation("StoreToBillboard")
+  categories    Category[]    @relation("StoreToCategory")
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 }
@@ -38,6 +40,7 @@ model Billboard {
 
   // The prisma relation mode does not use foreign keys, so no indexes are created when you use Prisma Migrate or db push to apply changes to your database. You instead need to manually add an index on your relation scalar fields with the @@index attribute (or the @unique, @@unique or @@id attributes, if applicable).
   store             Store       @relation("StoreToBillboard", fields: [storeId], references: [id])
+  categories        Category[]  @relation("BillboardToCategory")
   storeId           String
   label             String
   imageUrl          String 
@@ -45,4 +48,19 @@ model Billboard {
   updatedAt         DateTime    @updatedAt
 
   @@index([storeId])
+}
+
+
+model Category {
+  id    String @id @default(uuid()) 
+  store Store @relation("StoreToCategory", fields: [storeId], references: [id])
+  storeId String
+  billboard Billboard @relation("BillboardToCategory", fields: [billboardId], references: [id])
+  billboardId String
+  name String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([storeId])
+  @@index([billboardId])
 }
