@@ -36,14 +36,22 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     const onConfirm = async () => {
         try {
             setLoading(true);
-            await axios.delete(`/api/${params.storeId}/billboards/${data.id}`);
-
-            toast.success("Billboard deleted");
+            const deletePromise = toast.promise(
+                axios.delete(`/api/${params.storeId}/billboards/${data.id}`),
+                {
+                    loading: "Deleting...",
+                    success: "Billboard deleted",
+                    error: "Make sure you removed all categories using this billboard first",
+                }
+            );
+            await deletePromise;
+            // toast.success("Billboard deleted");
             router.refresh();
         } catch (error) {
-            toast.error(
-                "Make sure you removed all categories using this billboard first"
-            );
+            console.log(error);
+            // toast.error(
+            //     "Make sure you removed all categories using this billboard first"
+            // );
         } finally {
             setOpen(false);
             setLoading(false);

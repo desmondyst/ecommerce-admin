@@ -66,25 +66,42 @@ const BillboardForm: React.FC<BillboardFormProps> = ({ initialData }) => {
 
     // can be called data or values doesnt matter
     // #DBG: Sometimes when you perform CRUD, u need refresh to get update because i think db not done then  upush therer alrdy
+    // #NOTE: Changed to promise based toaster
     const onSubmit = async (data: BillboardFormValues) => {
         try {
             setLoading(true);
             if (initialData) {
-                await axios.patch(
-                    `/api/${params.storeId}/billboards/${params.billboardId}`,
-                    data
+                const updatePromise = toast.promise(
+                    axios.patch(
+                        `/api/${params.storeId}/billboards/${params.billboardId}`,
+                        data
+                    ),
+                    {
+                        loading: "Updating...",
+                        success: toastMessage,
+                        error: "Something went wrong.",
+                    }
                 );
+                await updatePromise;
             } else {
-                await axios.post(`/api/${params.storeId}/billboards`, data);
+                const createPromise = toast.promise(
+                    axios.post(`/api/${params.storeId}/billboards`, data),
+                    {
+                        loading: "Creating...",
+                        success: toastMessage,
+                        error: "Something went wrong.",
+                    }
+                );
+                await createPromise;
             }
             clearCachesByServerAction(`/`);
             router.refresh();
             router.push(`/${params.storeId}/billboards`);
 
-            toast.success(toastMessage);
+            // toast.success(toastMessage);
         } catch (error: any) {
             console.log(error);
-            toast.error("Something went wrong.");
+            // toast.error("Something went wrong.");
         } finally {
             setLoading(false);
         }
@@ -93,17 +110,26 @@ const BillboardForm: React.FC<BillboardFormProps> = ({ initialData }) => {
     const onDelete = async () => {
         try {
             setLoading(true);
-            await axios.delete(
-                `/api/${params.storeId}/billboards/${params.billboardId}`
+            const deletePromise = toast.promise(
+                axios.delete(
+                    `/api/${params.storeId}/billboards/${params.billboardId}`
+                ),
+                {
+                    loading: "Deleting...",
+                    success: "Billboard deleted",
+                    error: "Make sure you removed all categories using this billboard first",
+                }
             );
+            await deletePromise;
             clearCachesByServerAction(`/`);
             router.refresh();
             router.push(`/${params.storeId}/billboards`);
-            toast.success("Billboard deleted");
+            // toast.success("Billboard deleted");
         } catch (error) {
-            toast.error(
-                "Make sure you removed all categories using this billboard first"
-            );
+            console.log(error);
+            // toast.error(
+            // "Make sure you removed all categories using this billboard first"
+            // );
         } finally {
             setLoading(false);
             setOpen(false);
