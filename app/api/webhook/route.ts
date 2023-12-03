@@ -12,7 +12,6 @@ import prismadb from "@/lib/prismadb";
 export async function POST(req: Request) {
     // text instead of JSON as this is a webhook
 
-    console.log("Web hook called");
     const body = await req.text();
     const signature = headers().get("Stripe-Signature") as string;
 
@@ -48,6 +47,7 @@ export async function POST(req: Request) {
         .filter((c) => c !== null)
         .join(", ");
 
+    // https://stripe.com/docs/api/events/types
     if (event.type === "checkout.session.completed") {
         const order = await prismadb.order.update({
             where: {
