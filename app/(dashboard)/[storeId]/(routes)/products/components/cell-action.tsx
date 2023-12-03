@@ -41,7 +41,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
                 {
                     loading: "Deleting...",
                     success: "Product deleted",
-                    error: "Something went wrong.",
+                    error: "There are orders linked to this product. ",
                 }
             );
             await deletePromise;
