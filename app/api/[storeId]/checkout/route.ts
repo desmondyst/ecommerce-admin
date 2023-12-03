@@ -17,6 +17,9 @@ export async function OPTIONS() {
     // body: This parameter represents the content of the response body. It can be any valid JSON-serializable object, such as an object, array, string, or number. In your example, an empty object ({}) is provided as the body, indicating that the response body will be an empty JSON object.
 
     // options: This parameter is an optional object that allows you to specify additional options for the response. In your example, it includes a headers property, where CORS headers ("Access-Control-Allow-Origin", "Access-Control-Allow-Methods", and "Access-Control-Allow-Headers") are provided.
+
+    console.log("LOGGING IN OPTIONS");
+
     return NextResponse.json({}, { headers: corsHeaders });
 }
 
@@ -24,6 +27,8 @@ export async function POST(
     req: Request,
     { params }: { params: { storeId: string } }
 ) {
+    console.log("LOGGING IN POST");
+
     // sent from frontend store upon checkout
     const { productIds } = await req.json();
 
