@@ -17,16 +17,22 @@ const Overview: React.FC<OverviewProps> = ({ data }) => {
     return (
         <ResponsiveContainer width="100%" height={350}>
             <BarChart data={data}>
-                <Tooltip />
+                <Tooltip
+                    contentStyle={{
+                        borderRadius: "1rem",
+                        backgroundColor: "white",
+                        color: "#3498db",
+                    }}
+                />
                 <XAxis
                     dataKey="name"
-                    stroke="888888"
+                    stroke="#888888"
                     fontSize={12}
                     tickLine={false}
                     axisLine={false}
                 />
                 <YAxis
-                    stroke="888888"
+                    stroke="#888888"
                     fontSize={12}
                     tickLine={false}
                     axisLine={false}
