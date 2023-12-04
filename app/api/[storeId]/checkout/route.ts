@@ -18,8 +18,6 @@ export async function OPTIONS() {
 
     // options: This parameter is an optional object that allows you to specify additional options for the response. In your example, it includes a headers property, where CORS headers ("Access-Control-Allow-Origin", "Access-Control-Allow-Methods", and "Access-Control-Allow-Headers") are provided.
 
-    console.log("LOGGING IN OPTIONS");
-
     return NextResponse.json({}, { headers: corsHeaders });
 }
 
@@ -27,8 +25,6 @@ export async function POST(
     req: Request,
     { params }: { params: { storeId: string } }
 ) {
-    console.log("LOGGING IN POST");
-
     // sent from frontend store upon checkout
     const { productIds } = await req.json();
 
@@ -44,6 +40,19 @@ export async function POST(
             },
         },
     });
+
+    const archivedProducts = products.filter((p) => p.isArchived === true);
+
+    // if there is unavailable (archived products), then --> tell the end user
+    if (archivedProducts.length > 0 || products.length !== productIds.length) {
+        return NextResponse.json(
+            {},
+            {
+                status: 404,
+                statusText: "Some of the products are no longer available.",
+            }
+        );
+    }
 
     // line_items: A list of items the user is purchasing
 
