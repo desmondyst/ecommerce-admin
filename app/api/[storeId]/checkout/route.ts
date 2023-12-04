@@ -46,11 +46,8 @@ export async function POST(
     // if there is unavailable (archived products), then --> tell the end user
     if (archivedProducts.length > 0 || products.length !== productIds.length) {
         return NextResponse.json(
-            {},
-            {
-                status: 404,
-                statusText: "Some of the products are no longer available.",
-            }
+            "Some of the products are no longer available.",
+            { status: 404 }
         );
     }
 
