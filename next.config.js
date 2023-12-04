@@ -23,8 +23,8 @@ const nextConfig = {
                     { key: "Access-Control-Allow-Credentials", value: "true" },
                     {
                         key: "Access-Control-Allow-Origin",
-                        value: "https://ecommerce-store-front-page.vercel.app/",
-                        // value: "*",
+                        // value: "https://ecommerce-store-front-page.vercel.app/",
+                        value: "*",
                     },
                     {
                         key: "Access-Control-Allow-Methods",
