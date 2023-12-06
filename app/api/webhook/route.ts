@@ -60,7 +60,11 @@ export async function POST(req: Request) {
                 phone: session?.customer_details?.phone || "",
             },
             include: {
-                orderItems: true,
+                orderItems: {
+                    include: {
+                        product: true,
+                    },
+                },
             },
         });
 
@@ -68,10 +72,26 @@ export async function POST(req: Request) {
             (orderItem) => orderItem.productId
         );
 
+        // decrement the count in the database
         await prismadb.product.updateMany({
             where: {
                 id: {
                     in: [...productIds],
+                },
+            },
+            data: {
+                quantity: { decrement: 1 },
+            },
+        });
+
+        // maybe set isArchived to true
+        await prismadb.product.updateMany({
+            where: {
+                id: {
+                    in: [...productIds],
+                },
+                quantity: {
+                    lte: 0,
                 },
             },
             data: {

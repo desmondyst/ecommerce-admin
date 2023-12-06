@@ -114,6 +114,7 @@ model Product {
   colorId     String
   images      Image[]     @relation("ProductToImage")
   orderItems  OrderItem[] @relation("ProductToOrderItem")
+  quantity    Int         @default(0)
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 

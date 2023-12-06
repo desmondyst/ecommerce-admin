@@ -65,6 +65,7 @@ export async function POST(
             images,
             isFeatured,
             isArchived,
+            quantity,
         } = body;
         if (!userId) {
             return new NextResponse("Unauthenticated", { status: 401 });
@@ -80,6 +81,10 @@ export async function POST(
 
         if (!categoryId) {
             return new NextResponse("Category ID is required", { status: 400 });
+        }
+
+        if (!quantity) {
+            return new NextResponse("Quantity is required", { status: 400 });
         }
 
         if (!colorId) {
@@ -120,6 +125,7 @@ export async function POST(
                 categoryId,
                 colorId,
                 sizeId,
+                quantity,
                 storeId: params.storeId,
                 images: {
                     createMany: {

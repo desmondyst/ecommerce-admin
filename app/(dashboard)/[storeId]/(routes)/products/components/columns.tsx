@@ -17,6 +17,7 @@ export type ProductColumn = {
     isArchived: boolean;
     // in db, createdAt is a date but we will format it
     createdAt: string;
+    quantity: number;
 };
 
 export const columns: ColumnDef<ProductColumn>[] = [
@@ -58,6 +59,16 @@ export const columns: ColumnDef<ProductColumn>[] = [
             </div>
         ),
     },
+    {
+        accessorKey: "quantity",
+        header: "Quantity",
+        cell: ({ row }) => (
+            <div className="flex items-center gap-x-2">
+                {row.original.quantity} remaining
+            </div>
+        ),
+    },
+
     {
         accessorKey: "createdAt",
         header: "Date",

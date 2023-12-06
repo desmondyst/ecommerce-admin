@@ -54,13 +54,14 @@ interface ProductFormProps {
 const formSchema = z.object({
     name: z.string().min(1),
     images: z.object({ url: z.string() }).array(),
-    // NOTE: coerce is needed to convert decimal to number
+    // NOTE: coerce is needed when converting
     price: z.coerce.number().min(1),
     categoryId: z.string().min(1),
     colorId: z.string().min(1),
     sizeId: z.string().min(1),
     isFeatured: z.boolean().default(false).optional(),
     isArchived: z.boolean().default(false).optional(),
+    quantity: z.coerce.number().min(1),
 });
 
 type ProductFormValues = z.infer<typeof formSchema>;
@@ -83,7 +84,10 @@ const ProductForm: React.FC<ProductFormProps> = ({
         resolver: zodResolver(formSchema),
         defaultValues: initialData
             ? // convert price from decimal to float is needed
-              { ...initialData, price: parseFloat(String(initialData?.price)) }
+              {
+                  ...initialData,
+                  price: parseFloat(String(initialData?.price)),
+              }
             : {
                   images: [],
                   price: 0,
@@ -92,6 +96,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
                   sizeId: "",
                   isFeatured: false,
                   isArchived: false,
+                  quantity: 0,
               },
     });
 
@@ -365,6 +370,24 @@ const ProductForm: React.FC<ProductFormProps> = ({
                                             ))}
                                         </SelectContent>
                                     </Select>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="quantity"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Quantity</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type="number"
+                                            disabled={loading}
+                                            placeholder="999"
+                                            {...field}
+                                        />
+                                    </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}

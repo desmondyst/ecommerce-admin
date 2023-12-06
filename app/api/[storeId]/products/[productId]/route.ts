@@ -52,6 +52,7 @@ export async function PATCH(
             images,
             isFeatured,
             isArchived,
+            quantity,
         } = body;
 
         if (!userId) {
@@ -68,6 +69,10 @@ export async function PATCH(
 
         if (!categoryId) {
             return new NextResponse("Category ID is required", { status: 400 });
+        }
+
+        if (!quantity) {
+            return new NextResponse("Quantity is required", { status: 400 });
         }
 
         if (!colorId) {
@@ -111,6 +116,7 @@ export async function PATCH(
                 categoryId,
                 colorId,
                 sizeId,
+                quantity,
                 images: {
                     deleteMany: {},
                 },
