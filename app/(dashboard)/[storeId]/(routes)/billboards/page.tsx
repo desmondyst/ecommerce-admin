@@ -3,8 +3,12 @@ import { format } from "date-fns";
 import prismadb from "@/lib/prismadb";
 import { BillboardClient } from "./components/client";
 import { BillboardColumn } from "./components/columns";
+import { revalidatePath } from "next/cache";
 
 const BillboardsPage = async ({ params }: { params: { storeId: string } }) => {
+    // # NOTE: to remove
+    revalidatePath("/");
+
     const billboards = await prismadb.billboard.findMany({
         where: {
             storeId: params.storeId,
